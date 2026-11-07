@@ -1,0 +1,644 @@
+openapi: 3.0.3
+info:
+  title: 10mg Credit V2 API
+  description: Multi-tenant white-label lending platform API specification
+  version: 2.0.0
+servers:
+  - url: /api/v2
+    description: Mock API and future backend endpoint
+paths:
+  /auth/login:
+    post:
+      summary: Authenticate user session
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, institutionId, role]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                institutionId:
+                  type: string
+                role:
+                  type: string
+                  enum: [lender, customer]
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSession'
+        '401':
+          description: Invalid credentials
+
+  /institutions/{id}:
+    get:
+      summary: Get institution configuration
+      operationId: getInstitution
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+    patch:
+      summary: Update institution settings
+      operationId: updateInstitution
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstitutionUpdateInput'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+
+  /dashboard/summary:
+    get:
+      summary: Get dashboard KPIs and aggregates
+      operationId: getDashboardSummary
+      parameters:
+        - name: institutionId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: role
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [lender, customer]
+        - name: customerId
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSummary'
+
+  /applications:
+    get:
+      summary: List loan applications
+      operationId: listApplications
+      parameters:
+        - name: institutionId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: customerId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoanApplication'
+    post:
+      summary: Submit a new loan application
+      operationId: createApplication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationInput'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanApplication'
+
+  /applications/{id}:
+    get:
+      summary: Get application details
+      operationId: getApplication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanApplication'
+
+  /applications/{id}/status:
+    patch:
+      summary: Approve or decline an application
+      operationId: updateApplicationStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [Approved, Declined, 'In review', Pending]
+                decisionNote:
+                  type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanApplication'
+
+  /customers:
+    get:
+      summary: Get customer directory
+      operationId: listCustomers
+      parameters:
+        - name: institutionId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+
+  /customers/{id}:
+    get:
+      summary: Get customer profile details
+      operationId: getCustomer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerProfile'
+
+  /loans:
+    get:
+      summary: List loans
+      operationId: listLoans
+      parameters:
+        - name: institutionId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: customerId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Loan'
+
+  /loans/{id}:
+    get:
+      summary: Get loan account details
+      operationId: getLoan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+
+  /loans/{id}/repayments:
+    get:
+      summary: Get repayment history for a loan
+      operationId: getLoanRepayments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Repayment'
+
+  /repayments:
+    post:
+      summary: Record a simulated repayment
+      operationId: recordRepayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [loanId, amount, customerId, institutionId]
+              properties:
+                loanId:
+                  type: string
+                amount:
+                  type: number
+                customerId:
+                  type: string
+                institutionId:
+                  type: string
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repayment'
+
+  /notifications:
+    get:
+      summary: List institution notifications
+      operationId: listNotifications
+      parameters:
+        - name: institutionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationItem'
+    patch:
+      summary: Mark notifications as read
+      operationId: markNotificationRead
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notificationId:
+                  type: string
+                all:
+                  type: boolean
+                institutionId:
+                  type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+components:
+  schemas:
+    AuthSession:
+      type: object
+      required: [authenticated, user, institution]
+      properties:
+        authenticated:
+          type: boolean
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            role:
+              type: string
+              enum: [lender, customer]
+        institution:
+          $ref: '#/components/schemas/Institution'
+
+    Institution:
+      type: object
+      required: [id, name, short, initials, primary, sidebarMode, sidebarColor, currency, interest, minLoan, maxLoan]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        short:
+          type: string
+        initials:
+          type: string
+        primary:
+          type: string
+        sidebarMode:
+          type: string
+          enum: [light, brand, custom]
+        sidebarColor:
+          type: string
+        currency:
+          type: string
+          enum: [NGN, GHS]
+        interest:
+          type: number
+        minLoan:
+          type: number
+        maxLoan:
+          type: number
+        autoNotify:
+          type: boolean
+        logo:
+          type: string
+        domain:
+          type: string
+
+    InstitutionUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+        short:
+          type: string
+        primary:
+          type: string
+        sidebarMode:
+          type: string
+          enum: [light, brand, custom]
+        sidebarColor:
+          type: string
+        currency:
+          type: string
+          enum: [NGN, GHS]
+        interest:
+          type: number
+        minLoan:
+          type: number
+        maxLoan:
+          type: number
+        autoNotify:
+          type: boolean
+        logo:
+          type: string
+
+    Customer:
+      type: object
+      required: [id, institutionId, name, business, email, joined, score, phone]
+      properties:
+        id:
+          type: string
+        institutionId:
+          type: string
+        name:
+          type: string
+        business:
+          type: string
+        email:
+          type: string
+        joined:
+          type: string
+        score:
+          type: number
+        phone:
+          type: string
+
+    CustomerProfile:
+      allOf:
+        - $ref: '#/components/schemas/Customer'
+        - type: object
+          properties:
+            applications:
+              type: array
+              items:
+                $ref: '#/components/schemas/LoanApplication'
+            loans:
+              type: array
+              items:
+                $ref: '#/components/schemas/Loan'
+
+    LoanApplication:
+      type: object
+      required: [id, institutionId, customerId, name, business, amount, purpose, term, status, submitted]
+      properties:
+        id:
+          type: string
+        institutionId:
+          type: string
+        customerId:
+          type: string
+        name:
+          type: string
+        business:
+          type: string
+        amount:
+          type: number
+        purpose:
+          type: string
+        term:
+          type: number
+        status:
+          type: string
+          enum: [Pending, 'In review', Approved, Declined]
+        submitted:
+          type: string
+        note:
+          type: string
+
+    CreateApplicationInput:
+      type: object
+      required: [institutionId, customerId, name, business, amount, purpose, term]
+      properties:
+        institutionId:
+          type: string
+        customerId:
+          type: string
+        name:
+          type: string
+        business:
+          type: string
+        amount:
+          type: number
+        purpose:
+          type: string
+        term:
+          type: number
+
+    Loan:
+      type: object
+      required: [id, applicationId, institutionId, customerId, borrower, business, principal, totalDue, paid, term, issued, due, status]
+      properties:
+        id:
+          type: string
+        applicationId:
+          type: string
+        institutionId:
+          type: string
+        customerId:
+          type: string
+        borrower:
+          type: string
+        business:
+          type: string
+        principal:
+          type: number
+        totalDue:
+          type: number
+        paid:
+          type: number
+        term:
+          type: number
+        issued:
+          type: string
+        due:
+          type: string
+        status:
+          type: string
+          enum: [Active, Completed, Overdue]
+
+    Repayment:
+      type: object
+      required: [id, institutionId, loanId, customerId, name, business, amount, date, status]
+      properties:
+        id:
+          type: string
+        institutionId:
+          type: string
+        loanId:
+          type: string
+        customerId:
+          type: string
+        name:
+          type: string
+        business:
+          type: string
+        amount:
+          type: number
+        date:
+          type: string
+        status:
+          type: string
+          enum: [Paid, Scheduled, Processing]
+
+    NotificationItem:
+      type: object
+      required: [id, institutionId, title, message, time, read, category]
+      properties:
+        id:
+          type: string
+        institutionId:
+          type: string
+        title:
+          type: string
+        message:
+          type: string
+        time:
+          type: string
+        read:
+          type: boolean
+        category:
+          type: string
+          enum: [application, repayment, system]
+        targetRoute:
+          type: string
+        targetId:
+          type: string
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalDisbursed:
+          type: number
+        activeLoansCount:
+          type: number
+        pendingReviewCount:
+          type: number
+        totalCollected:
+          type: number
+        outstandingBalance:
+          type: number
+        approvalRate:
+          type: number
+
