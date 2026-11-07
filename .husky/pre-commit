@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Running pre-commit quality gate..."
+yarn check:file-size
+yarn lint-staged
+yarn typecheck

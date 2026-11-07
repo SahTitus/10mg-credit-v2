@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" fill="none" preserveAspectRatio="xMaxYMax slice">
+  <circle cx="330" cy="400" r="170" fill="#ffffff" fill-opacity="0.05"/>
+  <circle cx="330" cy="400" r="104" fill="#ffffff" fill-opacity="0.05"/>
+  <rect x="268" y="48" width="44" height="132" rx="14" transform="rotate(32 290 114)" fill="#ffffff" fill-opacity="0.07"/>
+  <rect x="268" y="48" width="44" height="132" rx="14" transform="rotate(122 290 114)" fill="#ffffff" fill-opacity="0.07"/>
+  <rect x="-30" y="300" width="150" height="56" rx="28" transform="rotate(-28 45 328)" fill="#ffffff" fill-opacity="0.06"/>
+  <path d="M-30 300 L45 300" stroke="none"/>
+  <circle cx="60" cy="150" r="22" fill="#ffffff" fill-opacity="0.06"/>
+  <circle cx="196" cy="438" r="9" fill="#ffffff" fill-opacity="0.12"/>
+  <circle cx="372" cy="236" r="7" fill="#ffffff" fill-opacity="0.12"/>
+</svg>
+
