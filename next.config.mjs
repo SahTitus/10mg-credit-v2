@@ -2,7 +2,7 @@ const nextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: process.cwd(),
   compiler: {
-    // Remove console calls from production bundles, including console.error
+    // Remove console calls from production bundles
     removeConsole: process.env.NODE_ENV === 'production',
   },
   images: {
