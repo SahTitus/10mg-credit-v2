@@ -292,7 +292,9 @@ export class MockStorageAdapter {
           ][i % 4],
           term: i % 2 ? 4 : 3,
           status: statuses[i],
-          submitted: new Date(Date.now() - (i * 2 + 1) * 86400000).toISOString().slice(0, 10),
+          submitted: new Date(
+            Date.now() - (i * 2 + 1) * 86400000 - ((i * 3 + 2) % 8) * 3600000,
+          ).toISOString(),
           note:
             statuses[i] === APPLICATION_STATUSES.DECLINED
               ? 'Exceeds short-term liquidity threshold'
@@ -330,7 +332,9 @@ export class MockStorageAdapter {
             name: p[0],
             business: p[1],
             amount: paid,
-            date: new Date(Date.now() - (i + 4) * 86400000).toISOString().slice(0, 10),
+            date: new Date(
+              Date.now() - (i + 4) * 86400000 - ((i * 2 + 3) % 6) * 3600000,
+            ).toISOString(),
             status: REPAYMENT_STATUSES.PAID,
           });
         }
@@ -351,7 +355,7 @@ export class MockStorageAdapter {
         purpose: 'Clinic supplies',
         term: 3,
         status: APPLICATION_STATUSES.PENDING,
-        submitted: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
+        submitted: new Date(Date.now() - 86400000 - 3 * 3600000).toISOString(),
         note: '',
       });
 

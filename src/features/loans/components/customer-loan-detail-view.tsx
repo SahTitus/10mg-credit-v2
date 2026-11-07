@@ -26,7 +26,7 @@ import { RecordHeader } from '@/components/shared/record-header';
 import { MobileDataCard, ResponsiveDataList } from '@/components/shared/responsive-data-list';
 import { LOAN_STATUSES } from '@/lib/constants/application-statuses';
 import { APP_ROUTE_BUILDERS, APP_ROUTES } from '@/lib/constants/routes';
-import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate, formatTime } from '@/lib/utils/formatters';
 import { getLoanBalance, getLoanProgress } from '@/lib/utils/loan-metrics';
 import type { Institution } from '@/types/institution';
 import type { Loan, LoanScheduleInstallment } from '@/types/loan';
@@ -64,7 +64,17 @@ export function CustomerLoanDetailView({
   const accountRows = [
     { label: 'Loan reference', value: loan.id },
     { label: 'Borrower', value: loan.borrower },
-    { label: 'Disbursed', value: formatDate(loan.issued) },
+    {
+      label: 'Disbursed',
+      value: (
+        <>
+          <span className="block">{formatDate(loan.issued)}</span>
+          <span className="block text-2xs font-normal text-muted-foreground">
+            {formatTime(loan.issued)}
+          </span>
+        </>
+      ),
+    },
     { label: 'Final due date', value: formatDate(loan.due) },
     {
       label: 'Linked application',
@@ -219,8 +229,13 @@ export function CustomerLoanDetailView({
                           <TableCell className="font-mono font-semibold text-foreground">
                             {payment.id}
                           </TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {formatDate(payment.date)}
+                          <TableCell>
+                            <span className="block font-semibold text-foreground">
+                              {formatDate(payment.date)}
+                            </span>
+                            <span className="block text-2xs text-muted-foreground">
+                              {formatTime(payment.date)}
+                            </span>
                           </TableCell>
                           <TableCell className="font-mono font-bold text-foreground">
                             {formatCurrency(payment.amount, currency)}
@@ -254,7 +269,7 @@ export function CustomerLoanDetailView({
                       </span>
                     }
                     title={payment.id}
-                    subtitle={formatDate(payment.date)}
+                    subtitle={`${formatDate(payment.date)} · ${formatTime(payment.date)}`}
                     value={formatCurrency(payment.amount, currency)}
                     trailing={<StatusBadge status={payment.status} />}
                   />

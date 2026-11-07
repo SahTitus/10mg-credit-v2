@@ -3,6 +3,7 @@ import {
   formatCurrency,
   formatDate,
   formatShortDate,
+  formatTime,
   getInitials,
   clamp,
 } from '@/lib/utils/formatters';
@@ -39,5 +40,12 @@ describe('Formatters Utility', () => {
   it('formats dates consistently', () => {
     expect(formatDate('2026-03-15')).toContain('Mar');
     expect(formatShortDate('2026-03-15')).toContain('Mar');
+  });
+
+  it('formats time timestamps consistently for dates and ISO strings', () => {
+    expect(formatTime(undefined)).toBe('—');
+    expect(formatTime('invalid')).toBe('—');
+    expect(formatTime('2026-03-15')).toMatch(/\d{2}:\d{2}\s(AM|PM)/);
+    expect(formatTime('2026-03-15T14:30:00Z')).toMatch(/\d{2}:\d{2}\s(AM|PM)/);
   });
 });

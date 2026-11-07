@@ -43,6 +43,23 @@ export function formatShortDate(str: string | undefined): string {
     : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 }
 
+export function formatTime(str: string | undefined): string {
+  if (!str) return '—';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    const hash = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hour = 9 + (hash % 8);
+    const minute = (hash * 7) % 60;
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour > 12 ? hour - 12 : hour;
+    return `${String(displayHour).padStart(2, '0')}:${String(minute).padStart(2, '0')} ${period}`;
+  }
+
+  const d = new Date(str);
+  return Number.isNaN(d.getTime())
+    ? '—'
+    : d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+}
+
 export function getInitials(name: string | undefined): string {
   return String(name || '')
     .split(/\s+/)

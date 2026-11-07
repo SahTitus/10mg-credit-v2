@@ -15,7 +15,7 @@ import { APPLICATION_STATUSES } from '@/lib/constants/application-statuses';
 import { QUERY_KEYS } from '@/lib/constants/query-keys';
 import { getErrorMessage } from '@/lib/errors/error-handler';
 import { cn } from '@/lib/utils/cn';
-import { formatCurrency, formatDate, formatShortDate } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate, formatShortDate, formatTime } from '@/lib/utils/formatters';
 import { keepScopedPreviousData } from '@/lib/utils/query-helpers';
 import type { LenderActivityCategory } from '@/types/dashboard';
 import type { CurrencyCode } from '@/types/institution';
@@ -181,7 +181,7 @@ export function LenderRecentActivity({
                     {formatCurrency(item.amount, currency)}
                   </strong>
                   <span className="mt-0.5 block text-3xs text-muted-foreground">
-                    {formatShortDate(item.date)}
+                    {formatShortDate(item.date)} · {formatTime(item.date)}
                   </span>
                 </div>
               </Link>
@@ -261,7 +261,7 @@ export function LenderRecentActivity({
                       {item.business} · <span className="font-mono">{item.referenceId}</span>
                     </span>
                     <span className="mt-1 block text-3xs text-muted-foreground">
-                      {formatDate(item.date)}
+                      {formatDate(item.date)} · {formatTime(item.date)}
                     </span>
                   </span>
                 </span>

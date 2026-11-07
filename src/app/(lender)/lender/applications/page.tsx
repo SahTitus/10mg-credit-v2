@@ -46,7 +46,7 @@ import {
   type ApplicationStatusFilter,
 } from '@/lib/constants/application-statuses';
 import { APP_ROUTE_BUILDERS } from '@/lib/constants/routes';
-import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate, formatTime } from '@/lib/utils/formatters';
 
 function ApplicationsPageContent() {
   const router = useRouter();
@@ -242,8 +242,13 @@ function ApplicationsPageContent() {
                           <TableCell className="font-mono font-semibold text-foreground">
                             {formatCurrency(app.amount, currentInstitution.currency)}
                           </TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {formatDate(app.submitted)}
+                          <TableCell>
+                            <span className="block font-semibold text-foreground">
+                              {formatDate(app.submitted)}
+                            </span>
+                            <span className="block text-2xs text-muted-foreground">
+                              {formatTime(app.submitted)}
+                            </span>
                           </TableCell>
                           <TableCell>
                             <StatusBadge status={app.status} />
@@ -266,7 +271,7 @@ function ApplicationsPageContent() {
                     href={APP_ROUTE_BUILDERS.LENDER.APPLICATION(app.id)}
                     leading={<Avatar name={app.business} size="sm" />}
                     title={app.business}
-                    subtitle={`${app.id} · ${formatDate(app.submitted)}`}
+                    subtitle={`${app.id} · ${formatDate(app.submitted)} · ${formatTime(app.submitted)}`}
                     value={formatCurrency(app.amount, currentInstitution.currency)}
                     trailing={<StatusBadge status={app.status} />}
                   />

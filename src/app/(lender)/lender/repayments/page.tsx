@@ -46,7 +46,7 @@ import { PAGINATION_DEFAULTS } from '@/lib/constants/pagination';
 import { QUERY_KEYS } from '@/lib/constants/query-keys';
 import { APP_ROUTE_BUILDERS } from '@/lib/constants/routes';
 import { getErrorMessage } from '@/lib/errors/error-handler';
-import { formatCurrency, formatDate, getCurrencySymbol } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate, formatTime, getCurrencySymbol } from '@/lib/utils/formatters';
 import { getLoanBalance } from '@/lib/utils/loan-metrics';
 import { keepScopedPreviousData } from '@/lib/utils/query-helpers';
 import { invalidateAfterRepayment } from '@/lib/utils/query-invalidation';
@@ -355,8 +355,13 @@ export default function RepaymentsPage() {
                           <TableCell className="font-mono font-bold text-foreground">
                             {formatCurrency(r.amount, currentInstitution.currency)}
                           </TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {formatDate(r.date)}
+                          <TableCell>
+                            <span className="block font-semibold text-foreground">
+                              {formatDate(r.date)}
+                            </span>
+                            <span className="block text-2xs text-muted-foreground">
+                              {formatTime(r.date)}
+                            </span>
                           </TableCell>
                           <TableCell>
                             <StatusBadge status={r.status} />
@@ -387,7 +392,7 @@ export default function RepaymentsPage() {
                     href={APP_ROUTE_BUILDERS.LENDER.REPAYMENT(payment.id)}
                     leading={<Avatar name={payment.business} size="sm" />}
                     title={payment.business}
-                    subtitle={`${payment.id} · ${formatDate(payment.date)}`}
+                    subtitle={`${payment.id} · ${formatDate(payment.date)} · ${formatTime(payment.date)}`}
                     value={formatCurrency(payment.amount, currentInstitution.currency)}
                     trailing={<StatusBadge status={payment.status} />}
                   />

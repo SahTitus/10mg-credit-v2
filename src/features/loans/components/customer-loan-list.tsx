@@ -36,7 +36,7 @@ import { PAGINATION_DEFAULTS } from '@/lib/constants/pagination';
 import { QUERY_KEYS } from '@/lib/constants/query-keys';
 import { APP_ROUTE_BUILDERS } from '@/lib/constants/routes';
 import { getErrorMessage } from '@/lib/errors/error-handler';
-import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate, formatTime } from '@/lib/utils/formatters';
 import { getLoanBalance, getLoanProgress } from '@/lib/utils/loan-metrics';
 import { keepScopedPreviousData } from '@/lib/utils/query-helpers';
 import { useDebounce } from '@/lib/utils/use-debounce';
@@ -174,8 +174,13 @@ export function CustomerLoanList({ currency }: CustomerLoanListProps) {
                               </span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {formatDate(loan.issued)}
+                          <TableCell>
+                            <span className="block font-semibold text-foreground">
+                              {formatDate(loan.issued)}
+                            </span>
+                            <span className="block text-2xs text-muted-foreground">
+                              {formatTime(loan.issued)}
+                            </span>
                           </TableCell>
                           <TableCell className="text-muted-foreground">
                             {loan.term} months
@@ -232,7 +237,7 @@ export function CustomerLoanList({ currency }: CustomerLoanListProps) {
                       </span>
                     }
                     title={loan.id}
-                    subtitle={`${progress}% repaid · ${loan.term} months`}
+                    subtitle={`${progress}% repaid · Issued ${formatDate(loan.issued)} · ${formatTime(loan.issued)}`}
                     value={formatCurrency(remaining, currency)}
                     trailing={<StatusBadge status={loan.status} />}
                   />

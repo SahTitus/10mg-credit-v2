@@ -104,7 +104,7 @@ export function handleRepaymentRecord(dto: RecordRepaymentDTO): Repayment {
       name: loan.borrower,
       business: loan.business,
       amount: dto.amount,
-      date: new Date().toISOString().slice(0, 10),
+      date: new Date().toISOString(),
       status: REPAYMENT_STATUSES.PAID,
     };
 

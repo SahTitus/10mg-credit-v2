@@ -48,7 +48,7 @@ import { PAGINATION_DEFAULTS } from '@/lib/constants/pagination';
 import { QUERY_KEYS } from '@/lib/constants/query-keys';
 import { APP_ROUTE_BUILDERS } from '@/lib/constants/routes';
 import { getErrorMessage } from '@/lib/errors/error-handler';
-import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate, formatTime } from '@/lib/utils/formatters';
 import { keepScopedPreviousData } from '@/lib/utils/query-helpers';
 import { invalidateAfterApplicationWithdrawn } from '@/lib/utils/query-invalidation';
 import { useDebounce } from '@/lib/utils/use-debounce';
@@ -229,8 +229,13 @@ export function ApplicationTracker({ currency }: ApplicationTrackerProps) {
                           <TableCell className="font-mono font-semibold text-foreground">
                             {formatCurrency(application.amount, currency)}
                           </TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {formatDate(application.submitted)}
+                          <TableCell>
+                            <span className="block font-semibold text-foreground">
+                              {formatDate(application.submitted)}
+                            </span>
+                            <span className="block text-2xs text-muted-foreground">
+                              {formatTime(application.submitted)}
+                            </span>
                           </TableCell>
                           <TableCell>
                             <StatusBadge status={application.status} />
@@ -303,7 +308,7 @@ export function ApplicationTracker({ currency }: ApplicationTrackerProps) {
                     </span>
                   }
                   title={application.purpose}
-                  subtitle={`${application.id} · ${formatDate(application.submitted)}`}
+                  subtitle={`${application.id} · ${formatDate(application.submitted)} · ${formatTime(application.submitted)}`}
                   value={formatCurrency(application.amount, currency)}
                   trailing={<StatusBadge status={application.status} />}
                 />

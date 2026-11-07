@@ -17,7 +17,7 @@ import { RecordNotFound } from '@/components/shared/record-not-found';
 import { useLenderApplicationDetail } from '@/features/applications/hooks/use-lender-application-detail';
 import { APPLICATION_STATUSES } from '@/lib/constants/application-statuses';
 import { APP_ROUTE_BUILDERS, APP_ROUTES } from '@/lib/constants/routes';
-import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate, formatTime } from '@/lib/utils/formatters';
 
 export default function LenderApplicationDetailPage() {
   const {
@@ -73,7 +73,17 @@ export default function LenderApplicationDetailPage() {
       label: 'Estimated repayment',
       value: `${formatCurrency(monthlyEstimate, institution.currency)}/mo`,
     },
-    { label: 'Submitted', value: formatDate(application.submitted) },
+    {
+      label: 'Submitted',
+      value: (
+        <>
+          <span className="block">{formatDate(application.submitted)}</span>
+          <span className="block text-2xs font-normal text-muted-foreground">
+            {formatTime(application.submitted)}
+          </span>
+        </>
+      ),
+    },
   ];
 
   const applicantRows = [
@@ -89,7 +99,7 @@ export default function LenderApplicationDetailPage() {
         backLabel="Applications"
         overline={application.id}
         title="Application details"
-        subtitle={`${application.business} · Submitted ${formatDate(application.submitted)}`}
+        subtitle={`${application.business} · Submitted ${formatDate(application.submitted)} · ${formatTime(application.submitted)}`}
         status={<StatusBadge status={application.status} />}
         actions={
           isPending ? (

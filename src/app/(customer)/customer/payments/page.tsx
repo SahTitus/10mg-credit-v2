@@ -31,7 +31,7 @@ import { MakeRepaymentDialog } from '@/features/repayments/components/make-repay
 import { useCustomerRepayments } from '@/features/repayments/hooks/use-customer-repayments';
 import { PAGINATION_DEFAULTS } from '@/lib/constants/pagination';
 import { APP_ROUTE_BUILDERS } from '@/lib/constants/routes';
-import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate, formatTime } from '@/lib/utils/formatters';
 
 export default function CustomerPaymentsPage() {
   const router = useRouter();
@@ -187,8 +187,13 @@ export default function CustomerPaymentsPage() {
                           <TableCell className="font-mono text-muted-foreground">
                             {payment.loanId}
                           </TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {formatDate(payment.date)}
+                          <TableCell>
+                            <span className="block font-semibold text-foreground">
+                              {formatDate(payment.date)}
+                            </span>
+                            <span className="block text-2xs text-muted-foreground">
+                              {formatTime(payment.date)}
+                            </span>
                           </TableCell>
                           <TableCell className="font-mono font-bold text-foreground">
                             {formatCurrency(payment.amount, currency)}
@@ -228,7 +233,7 @@ export default function CustomerPaymentsPage() {
                       </span>
                     }
                     title={payment.id}
-                    subtitle={`${payment.loanId} · ${formatDate(payment.date)}`}
+                    subtitle={`${payment.loanId} · ${formatDate(payment.date)} · ${formatTime(payment.date)}`}
                     value={formatCurrency(payment.amount, currency)}
                     trailing={<StatusBadge status={payment.status} />}
                   />

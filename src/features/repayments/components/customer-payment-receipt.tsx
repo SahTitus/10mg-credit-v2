@@ -7,7 +7,7 @@ import { Progress } from '@/components/primitives/progress';
 import { DetailList } from '@/components/shared/detail-list';
 import { RecordHeader } from '@/components/shared/record-header';
 import { APP_ROUTE_BUILDERS, APP_ROUTES } from '@/lib/constants/routes';
-import { clamp, formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { clamp, formatCurrency, formatDate, formatTime } from '@/lib/utils/formatters';
 import type { Institution } from '@/types/institution';
 import type { Loan } from '@/types/loan';
 import type { Repayment } from '@/types/repayment';
@@ -40,7 +40,17 @@ export function CustomerPaymentReceipt({
 
   const receiptRows = [
     { label: 'Reference', value: payment.id },
-    { label: 'Payment date', value: formatDate(payment.date) },
+    {
+      label: 'Payment date',
+      value: (
+        <>
+          <span className="block">{formatDate(payment.date)}</span>
+          <span className="block text-2xs font-normal text-muted-foreground">
+            {formatTime(payment.date)}
+          </span>
+        </>
+      ),
+    },
     { label: 'Loan account', value: payment.loanId },
     { label: 'Paid by', value: payment.name },
     { label: 'Business', value: payment.business },
@@ -56,7 +66,7 @@ export function CustomerPaymentReceipt({
         backLabel={backLabel}
         overline={payment.id}
         title="Payment details"
-        subtitle={`${formatDate(payment.date)} · ${payment.business}`}
+        subtitle={`${formatDate(payment.date)} · ${formatTime(payment.date)} · ${payment.business}`}
         status={<StatusBadge status={payment.status} />}
       />
 
@@ -105,8 +115,8 @@ export function CustomerPaymentReceipt({
                         <strong className="block font-semibold text-foreground group-hover:text-brand">
                           {entry.id}
                         </strong>
-                        <small className="text-2xs text-muted-foreground">
-                          {formatDate(entry.date)}
+                        <small className="block text-2xs text-muted-foreground">
+                          {formatDate(entry.date)} · {formatTime(entry.date)}
                         </small>
                       </span>
                       <span className="font-bold tabular-nums text-foreground">

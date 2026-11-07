@@ -139,7 +139,7 @@ export function handleApplicationCreate(dto: CreateApplicationDTO): LoanApplicat
       throw new ValidationError('Applicant name and business name are required.');
     }
 
-    const today = new Date().toISOString().slice(0, 10);
+    const today = new Date().toISOString();
 
     if (!resolvedCustomer) {
       const nextCustomerSeq =
@@ -253,7 +253,7 @@ export function handleApplicationUpdateStatus(
           totalDue,
           paid: 0,
           term: existing.term,
-          issued: new Date().toISOString().slice(0, 10),
+          issued: new Date().toISOString(),
           due: new Date(Date.now() + existing.term * 30 * 86400000).toISOString().slice(0, 10),
           status: LOAN_STATUSES.ACTIVE,
         };
