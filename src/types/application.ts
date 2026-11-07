@@ -1,4 +1,5 @@
 import { APPLICATION_STATUSES } from '@/lib/constants/application-statuses';
+import type { PaginatedResult } from '@/lib/constants/pagination';
 
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[keyof typeof APPLICATION_STATUSES];
 
@@ -31,4 +32,28 @@ export interface CreateApplicationDTO {
   readonly purpose: string;
   readonly term: number;
   readonly notes?: string;
+}
+
+export interface ApplicationQueryParams {
+  institutionId: string;
+  customerId?: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface ApplicationsMetricsSummary {
+  totalCount: number;
+  pendingCount: number;
+  pendingValue: number;
+  approvedCount: number;
+  approvedValue: number;
+  declinedCount: number;
+  approvalRate: number;
+  requestedVolume: number;
+}
+
+export interface PaginatedApplicationsResponse extends PaginatedResult<LoanApplication> {
+  summary: ApplicationsMetricsSummary;
 }

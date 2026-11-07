@@ -1,4 +1,5 @@
 import { INSTALLMENT_STATUSES, LOAN_STATUSES } from '@/lib/constants/application-statuses';
+import type { PaginatedResult } from '@/lib/constants/pagination';
 
 export type LoanStatus = (typeof LOAN_STATUSES)[keyof typeof LOAN_STATUSES];
 
@@ -25,4 +26,28 @@ export interface LoanScheduleInstallment {
   readonly principalPortion: number;
   readonly interestPortion: number;
   readonly status: (typeof INSTALLMENT_STATUSES)[keyof typeof INSTALLMENT_STATUSES];
+}
+
+export interface LoanQueryParams {
+  institutionId: string;
+  customerId?: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface LoansMetricsSummary {
+  totalCount: number;
+  activeCount: number;
+  completedCount: number;
+  overdueCount: number;
+  principalTotal: number;
+  outstandingBalance: number;
+  totalCollected: number;
+  repaymentRate: number;
+}
+
+export interface PaginatedLoansResponse extends PaginatedResult<Loan> {
+  summary: LoansMetricsSummary;
 }
